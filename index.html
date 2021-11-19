@@ -1,1 +1,25 @@
-"hi!"
+<html>
+<head>
+
+<!DOCTYPE html>
+<script>
+"use strict";
+
+(async () => {
+let response = await fetch("https://libretranslate.de/translate", {
+	method: "POST",
+	body: JSON.stringify({
+		q: "How old are you?",
+		source: "en",
+		target: "de"
+	}),
+	headers: { "Content-Type": "application/json" }
+});
+
+let text = await response.text(); // read response body as text
+
+alert(text);
+})()
+
+</script>
+
