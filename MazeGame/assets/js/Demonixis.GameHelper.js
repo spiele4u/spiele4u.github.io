@@ -1,20 +1,14 @@
 var Demonixis = window.Demonixis || {};
 Demonixis.GameHelper = Demonixis.GameHelper || {};
 
-Demonixis.GameHelper.LevelHelper = function(start, end) {
-    this.current = start || 1;
-    this.next = this.current + 1;
-    this.count = end || 5;
-    this.isFinished = false;
+Demonixis.GameHelper.LevelHelper = function(end) {
+    this.current = 1;
+    this.count = end;
 
     this.getNext = function() {
-        if (this.next > this.count) {
+        this.current++;		
+        if (this.current > this.count) {
             this.current = 1;
-            this.next = 2;
-            this.isFinished = true;
-        } else {
-            this.current = this.next;
-            this.next++;
         }
 
         return this.current;

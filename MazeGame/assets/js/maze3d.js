@@ -6,7 +6,7 @@
     var input, miniMap, levelHelper, CameraHelper;
     var map = new Array();
     var running = true;
-
+	var levelCount = 2;
     function initializeEngine() {
         renderer = new THREE.WebGLRenderer({
             antialias: true
@@ -24,7 +24,7 @@
         document.getElementById("canvasContainer").appendChild(renderer.domElement);
 
         input = new Demonixis.Input();
-        levelHelper = new Demonixis.GameHelper.LevelHelper();
+        levelHelper = new Demonixis.GameHelper.LevelHelper(levelCount);
         cameraHelper = new Demonixis.GameHelper.CameraHelper(camera);
 
         window.addEventListener("resize", function() {
@@ -260,25 +260,26 @@
     }
 
     function endScreen() {
-        if (levelHelper.isFinished || levelHelper.isMobile) {
-            alert("Good job, The game is over\n\nThanks you for playing!");
-            document.location.href = "https://plus.google.com/u/0/114532615363095107351/posts";
-        } else {
-            // Remove all childrens.
-            for (var i = 0, l = scene.children.length; i < l; i++) {
-                scene.remove(scene.children[i]);
-            }
-            renderer.clear();
-            scene = new THREE.Scene();
-            loadLevel(levelHelper.getNext());
-            running = true;
+        if (levelHelper.current == levelHelper.count) {
+            alert("Good job, The game is over\n\nThank you for the playing!");
+        } 
+        // Remove all childrens.
+        for (var i = 0, l = scene.children.length; i < l; i++) {
+            scene.remove(scene.children[i]);
         }
+        renderer.clear();
+        scene = new THREE.Scene();
+		var nextlevel = levelHelper.getNext();
+        loadLevel(nextlevel);
+        running = true;
+
     }
 
     // Level loading
     function loadLevel(level) {
         var ajax = new XMLHttpRequest();
-        ajax.open("GET", "assets/maps/maze3d-" + level + ".json", true);
+		var newlevel = "assets/maps/maze3d-" + level + ".json";
+        ajax.open("GET", newlevel, true);
         ajax.onreadystatechange = function() {
             if (ajax.readyState == 4) {
                 map = JSON.parse(ajax.responseText);
@@ -304,16 +305,6 @@
 
     window.onload = function() {
         initializeEngine();
-
-        var level = 1; // Get parameter
-        if (level > 0 || level <= levelHelper.count) {
-            levelHelper.current = level;
-            levelHelper.next = level + 1;
-            loadLevel(level);
-        } else {
-            levelHelper.current = 1;
-            levelHelper.next = 2;
-            loadLevel(1);
-        }
+        loadLevel(1);
     };
 })();
